@@ -6,7 +6,7 @@ const currentStreakElement = document.getElementById('current-streak');
 const previousStreaksElement = document.getElementById('previous-streaks');
 
 // Get today's date
-const today = new Date().toISOString().slice(0, 10);
+const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
 dateElement.innerText = `Today is: ${today}`;
 
 // Initialize streak data
@@ -38,6 +38,7 @@ yesBtn.addEventListener('click', () => {
         localStorage.setItem('lastCheckInDate', today);
         currentStreakElement.innerText = currentStreak;
 
+        // Disable buttons after checking in
         yesBtn.disabled = true;
         noBtn.disabled = true;
     }
@@ -47,19 +48,23 @@ yesBtn.addEventListener('click', () => {
 noBtn.addEventListener('click', () => {
     if (lastCheckInDate !== today) {
         // Save the current streak to history
-        streakHistory.push(currentStreak);
-        localStorage.setItem('streakHistory', JSON.stringify(streakHistory));
-        
-        // Reset the current streak
-        const li = document.createElement('li');
-        li.innerText = `Streak: ${currentStreak} days`;
-        previousStreaksElement.appendChild(li);
+        if (currentStreak > 0) {
+            streakHistory.push(currentStreak);
+            localStorage.setItem('streakHistory', JSON.stringify(streakHistory));
+            
+            // Update previous streaks list
+            const li = document.createElement('li');
+            li.innerText = `Streak: ${currentStreak} days`;
+            previousStreaksElement.appendChild(li);
+        }
 
+        // Reset the current streak
         currentStreak = 0;
         localStorage.setItem('currentStreak', currentStreak);
         localStorage.setItem('lastCheckInDate', today);
         currentStreakElement.innerText = currentStreak;
 
+        // Disable buttons after checking in
         yesBtn.disabled = true;
         noBtn.disabled = true;
     }
